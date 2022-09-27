@@ -30,7 +30,7 @@ class Google:
                         texts.append(text)
                         start += 10
                     else:
-                        raise HTTPException("Failed to get HTTP Response", resp)
+                        raise HTTPException("Failed to get HTTP Response", resp.status)
             for text in texts:
                 soup = BeautifulSoup(text, "html.parser")
                 a_tags = soup.find_all('div', class_='yuRUbf')

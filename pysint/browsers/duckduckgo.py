@@ -35,13 +35,13 @@ class DuckDuckGo:
                     text = await resp.text()
                     texts.append(text)
                 else:
-                    raise HTTPException("Failed to get HTTP Response", resp)
+                    raise HTTPException("Failed to get HTTP Response", resp.status)
             async with session.post(f"https://lite.duckduckgo.com/lite/", headers=self.headers, data={'q': query,'s': s+30, 'o':'json', 'dc':start+16, 'api':'d.js', 'kl':'wt-wt' }) as resp:
                 if resp.status == 200:
                     text = await resp.text()
                     texts.append(text)
                 else:
-                    raise HTTPException("Failed to get HTTP Response", resp)
+                    raise HTTPException("Failed to get HTTP Response", resp.status)
 
             for i in range(amount-2):
                 async with session.post(f"https://lite.duckduckgo.com/lite/", headers=self.headers, data={'q': query,'s': s+50, 'o':'json', 'dc':start+50, 'api':'d.js', 'kl':'wt-wt' }) as resp:
@@ -49,7 +49,7 @@ class DuckDuckGo:
                         text = await resp.text()
                         texts.append(text)
                     else:
-                        raise HTTPException("Failed to get HTTP Response", resp)
+                        raise HTTPException("Failed to get HTTP Response", resp.status)
 
             for text in texts:
                 soup = BeautifulSoup(text, "html.parser")

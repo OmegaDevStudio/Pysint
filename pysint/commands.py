@@ -30,8 +30,10 @@ class Pysint:
     async def show(self):
         """Method to display all commands available to the user
         """
+        await aprint(f"{color.YELLOW}=================================================================={color.RESET}")
         for command in self.user_show:
-            await aprint(f"{command['name']}:  {command['description']}")
+            await aprint(f"{color.RED}{command['name']}:  {color.YELLOW}{command['description']}{color.RESET}")
+        await aprint(f"{color.YELLOW}=================================================================={color.RESET}")
 
     async def error(self, *args, **kwargs):
         """Message displayed if something errors
@@ -63,8 +65,11 @@ Type help below to display all the commands available to you. Parameters for a p
                         query = await ainput(f"{color.GREEN}Query required {color.LIGHTBLUE_EX}[{color.YELLOW}>{color.LIGHTBLUE_EX}]{color.RESET} ")
                         args.append(query)
                     if item == "amount":
-                        amount = await ainput(f"{color.GREEN}Amount required {color.LIGHTBLUE_EX}[{color.YELLOW}>{color.LIGHTBLUE_EX}]{color.RESET} ")
+                        amount = await ainput(f"{color.GREEN}Amount of searches required {color.LIGHTBLUE_EX}[{color.YELLOW}>{color.LIGHTBLUE_EX}]{color.RESET} ")
                         args.append(int(amount))
+                    if item == "path":
+                        path = await ainput(f"{color.GREEN}Path to image required {color.LIGHTBLUE_EX}[{color.YELLOW}>{color.LIGHTBLUE_EX}]{color.RESET} ")
+                        args.append(path)
                 try:
                     await self.all_commands.get(input, self.error)(*args)
                 except Exception as e:
@@ -83,6 +88,27 @@ async def help():
 async def google(query: str, amount: int = 4):
     google = Google()
     resp = await google.search(query, int(amount))
+    for url in resp:
+        await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND -> {url}")
+
+@Pysint.command(description="<query> <amount> - Searches yandex for specified query")
+async def yandex(query: str, amount: int = 4):
+    yandex = Yandex()
+    resp = await yandex.search(query, amount)
+    for url in resp:
+        await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND -> {url}")
+
+@Pysint.command(description="<path> - Searches yandex with image search")
+async def imagesearch(path: str):
+    yandex = Yandex()
+    resp = await yandex.image_search(path)
+    for url in resp:
+        await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND -> {url}")
+
+@Pysint.command(description="<query> <amount> - Searches duckduckgo for specified query")
+async def duck(query: str, amount: int = 4):
+    duck = DuckDuckGo()
+    resp = await duck.search(query, amount)
     for url in resp:
         await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND -> {url}")
 
@@ -119,7 +145,7 @@ async def ascii():
     await Pysint.ascii()
 
 
-@Pysint.command(description="Searches Twitter using dorking methods")
+@Pysint.command(description="<query> - Searches Twitter using dorking methods")
 async def twitter(query: str, amount: int =4):
     google = Google()
     yandex = Yandex()

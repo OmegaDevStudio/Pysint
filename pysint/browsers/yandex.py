@@ -32,7 +32,7 @@ class Yandex:
                         text = await resp.text()
                         texts.append(text)
                     else:
-                        raise HTTPException("Failed to get HTTP Response", resp)
+                        raise HTTPException("Failed to get HTTP Response", resp.status)
 
             for text in texts:
                 soup = BeautifulSoup(text, "html.parser")
@@ -50,6 +50,11 @@ class Yandex:
         Returns:
             list[str]: The links found from the searches
         """
+        try:
+            path = path.replace("'", "")
+        except:
+            pass
+
         async with aiohttp.ClientSession() as session:
             with open(path, 'rb')as f:
                 image = f.read()
@@ -60,16 +65,16 @@ class Yandex:
                     shard = k['image_shard']
                     id = k['image_id']
                 else:
-                    raise HTTPException("Failed to get HTTP Response", resp)
+                    raise HTTPException("Failed to get HTTP Response", resp.status)
 
-                    url = url.replace('preview', 'orig')
-                    async with session.get(f"https://yandex.com/images/search?rpt=imageview&url={url}&cbir_id={shard}/{id}", headers=self.headers) as resp:
-                        if resp.status == 200:
-                            text = await resp.text()
-                            soup = BeautifulSoup(text, "html.parser")
-                            info = [link.attrs['href'] for link in soup.find_all('a', class_='Link Link_view_default', href=True)]
-                            return info
-                        else:
-                            raise HTTPException("Failed to get HTTP Response", resp)
+                url = url.replace('preview', 'orig')
+                async with session.get(f"https://yandex.com/images/search?rpt=imageview&url={url}&cbir_id={shard}/{id}", headers=self.headers) as resp:
+                    if resp.status == 200:
+                        text = await resp.text()
+                        soup = BeautifulSoup(text, "html.parser")
+                        info = [link.attrs['href'] for link in soup.find_all('a', class_='Link Link_view_default', href=True)]
+                        return info
+                    else:
+                        raise HTTPException("Failed to get HTTP Response", resp.status)
 
 
