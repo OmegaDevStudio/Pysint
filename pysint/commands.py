@@ -61,8 +61,10 @@ Type help below to display all the commands available to you. Parameters for a p
                     if item == "amount":
                         amount = await ainput(f"{color.GREEN}Amount required {color.LIGHTBLUE_EX}[{color.YELLOW}>{color.LIGHTBLUE_EX}]{color.RESET} ")
                         args.append(amount)
-
-                await self.all_commands.get(input, self.error)(*args)
+                try:
+                    await self.all_commands.get(input, self.error)(*args)
+                except Exception as e:
+                    await aprint(f"{color.RED}Error: {e}{color.RESET}")
             else:
                 await self.all_commands.get(input, self.error)()
 
