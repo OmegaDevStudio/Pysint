@@ -1,10 +1,12 @@
 import asyncio
 from colorama import Fore as color
 from aioconsole import aprint, ainput
+from pysint.lookups.geoip import GeoIp
 
 from pysint.socials.facebook import Facebook
 from .browsers import *
 from .socials import *
+from .lookups import *
 
 
 class Pysint:
@@ -84,6 +86,10 @@ Pysint = Pysint()
 async def help():
     await Pysint.show()
 
+@Pysint.command(description="Shows very cool ascii")
+async def ascii():
+    await Pysint.ascii()
+
 @Pysint.command(description="<query> <amount> - Searches google for specified query")
 async def google(query: str, amount: int = 4):
     google = Google()
@@ -111,6 +117,20 @@ async def duck(query: str, amount: int = 4):
     resp = await duck.search(query, amount)
     for url in resp:
         await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND -> {url}")
+
+@Pysint.command(description="<query> - Searches shodan for specified query")
+async def shodan(query: str):
+    shodan = Shodan()
+    resp = await shodan.search(query)
+    for url in resp:
+        await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND -> {url}")
+
+@Pysint.command(description="<query> - Gives in depth shodan report for specified search")
+async def shodanreport(query: str):
+    shodan = Shodan()
+    resp = await shodan.report(query)
+    await aprint(resp)
+
 
 @Pysint.command(description="<query> <amount> - Searches Instagram using dorking methods")
 async def instagram(query: str, amount: int = 4):
@@ -140,9 +160,6 @@ async def facebookapi(query: str):
     for url in resp:
         await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND -> {url}")
 
-@Pysint.command(description="Shows very cool ascii")
-async def ascii():
-    await Pysint.ascii()
 
 
 @Pysint.command(description="<query> - Searches Twitter using dorking methods")
@@ -154,3 +171,9 @@ async def twitter(query: str, amount: int =4):
     for searches in gathered:
         for url in searches:
             await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND -> {url}")
+
+@Pysint.command(description="<query> - Gathers information regarding an IP address")
+async def geoip(query:str):
+    geoip = GeoIp()
+    resp = await geoip.get(query)
+    await aprint(resp)
