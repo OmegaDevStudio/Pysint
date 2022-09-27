@@ -11,7 +11,7 @@ class HTTPException(BrowserException):
     """Exception that's raised when a HTTP request operation fails.
 
     """
-    def __init__(self, message, resp: aiohttp.ClientResponse.status):
+    def __init__(self, message, resp: int):
         self.message = message
         self.status = resp
 

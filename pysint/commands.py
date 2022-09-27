@@ -1,7 +1,11 @@
 import asyncio
 from colorama import Fore as color
 from aioconsole import aprint, ainput
+
+from pysint.socials.facebook import Facebook
 from .browsers import *
+from .socials import *
+
 
 class Pysint:
     """A class dedicated for all Pysint related commands
@@ -51,7 +55,7 @@ Type help below to display all the commands available to you. Parameters for a p
 {color.LIGHTBLUE_EX}║
 {color.LIGHTBLUE_EX}╚══[{color.YELLOW}>{color.LIGHTBLUE_EX}] {color.RESET}""")
 
-            func = self.all_commands.get(input, self.error)
+            func = self.all_commands.get(input.lower(), self.error)
             if len(func.__code__.co_varnames) > 1:
                 args = []
                 for item in func.__code__.co_varnames:
@@ -60,7 +64,7 @@ Type help below to display all the commands available to you. Parameters for a p
                         args.append(query)
                     if item == "amount":
                         amount = await ainput(f"{color.GREEN}Amount required {color.LIGHTBLUE_EX}[{color.YELLOW}>{color.LIGHTBLUE_EX}]{color.RESET} ")
-                        args.append(amount)
+                        args.append(int(amount))
                 try:
                     await self.all_commands.get(input, self.error)(*args)
                 except Exception as e:
@@ -79,6 +83,48 @@ async def help():
 async def google(query: str, amount: int = 4):
     google = Google()
     resp = await google.search(query, int(amount))
-    for item in resp:
-        await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND -> {item}")
+    for url in resp:
+        await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND -> {url}")
 
+@Pysint.command(description="<query> <amount> - Searches Instagram using dorking methods")
+async def instagram(query: str, amount: int = 4):
+    google = Google()
+    yandex = Yandex()
+    duck = DuckDuckGo()
+
+    gathered = await asyncio.gather(google.search(f"site:'https://instagram.com' intitle:'{query}'", amount), yandex.search(f"site:'https://instagram.com' intitle:'{query}'", amount), duck.search(f"site:'https://instagram.com' intitle:'{query}'", amount) )
+    for searches in gathered:
+        for url in searches:
+            await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND -> {url}")
+
+@Pysint.command(description="<query> <amount> - Searches Facebook using dorking methods")
+async def facebook(query: str, amount: int = 4):
+    google = Google()
+    yandex = Yandex()
+    duck = DuckDuckGo()
+    gathered = await asyncio.gather(google.search(f"site:'https://facebook.com' intitle:'{query}'", amount), yandex.search(f"site:'https://facebook.com' intitle:'{query}'", amount), duck.search(f"site:'https://facebook.com' intitle:'{query}'", amount))
+    for searches in gathered:
+        for url in searches:
+            await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND -> {url}")
+
+@Pysint.command(description="<query> - Searches Facebook using API")
+async def facebookapi(query: str):
+    facebook = Facebook()
+    resp = await facebook.search(query)
+    for url in resp:
+        await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND -> {url}")
+
+@Pysint.command(description="Shows very cool ascii")
+async def ascii():
+    await Pysint.ascii()
+
+
+@Pysint.command(description="Searches Twitter using dorking methods")
+async def twitter(query: str, amount: int =4):
+    google = Google()
+    yandex = Yandex()
+    duck = DuckDuckGo()
+    gathered = await asyncio.gather(google.search(f"site:'https://twitter.com' intitle:'{query}'", amount), yandex.search(f"site:'https://twitter.com' intitle:'{query}'", amount), duck.search(f"site:'https://twitter.com' intitle:'{query}'", amount))
+    for searches in gathered:
+        for url in searches:
+            await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND -> {url}")
