@@ -174,14 +174,22 @@ async def twitter(query: str, amount: int =4):
         for url in searches:
             await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND -> {url}")
 
-@Pysint.command(description="<query> - Gathers information regarding an IP address")
+@Pysint.command(description="<query> - Gathers information regarding an IP address from public sources")
 async def geoip(query:str):
     geoip = Host()
     resp = await geoip.get_ip(query)
     await aprint(resp)
 
-@Pysint.command(description="<query> - Gathers information regarding a host")
+@Pysint.command(description="<query> - Attempts to get a domains IP address")
+async def domainip(query: str):
+    host = Host()
+    resp = await host.domain_ip(query)
+    await aprint(resp)
+
+@Pysint.command(description="<query> - Gathers information regarding a host from public sources")
 async def whois(query: str):
     host = Host()
     resp = await host.host_whois(query)
     await aprint(resp)
+
+

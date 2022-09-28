@@ -35,6 +35,16 @@ class Host:
 
                     return f"{color.YELLOW}{data.text}{color.RESET}"
 
+    async def domain_ip(self, query: str) -> str:
+        async with aiohttp.ClientSession() as session:
+            async with session.post(f"https://www.ipvoid.com/find-website-ip/", headers=self.headers, data={"website": query}) as resp:
+                if resp.status == 200:
+                    text = await resp.text()
+                    soup = BeautifulSoup(text, "html.parser")
+                    data = soup.find("textarea")
+
+                    return f"{color.YELLOW}{data.text}{color.RESET}"
+
 
             #form-control textarea
 
