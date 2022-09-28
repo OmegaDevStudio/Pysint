@@ -1,9 +1,8 @@
 import asyncio
 from colorama import Fore as color
 from aioconsole import aprint, ainput
-from pysint.lookups.geoip import GeoIp
-
-from pysint.socials.facebook import Facebook
+import os
+from .lookups import *
 from .browsers import *
 from .socials import *
 from .lookups import *
@@ -40,7 +39,7 @@ class Pysint:
     async def error(self, *args, **kwargs):
         """Message displayed if something errors
         """
-        await aprint(f"{color.RED}YOU FAILURE{color.RESET}")
+        await aprint(f"{color.RED}Error: You are fail - command does not exist{color.RESET}")
 
     async def ascii(self):
         """Method to display the very cool ascii
@@ -80,6 +79,8 @@ Type help below to display all the commands available to you. Parameters for a p
                 await self.all_commands.get(input, self.error)()
 
 
+
+
 Pysint = Pysint()
 
 @Pysint.command(description="Displays all commands available to the user")
@@ -88,6 +89,7 @@ async def help():
 
 @Pysint.command(description="Shows very cool ascii")
 async def ascii():
+    os.system('cls' if os.name == 'nt' else 'clear')
     await Pysint.ascii()
 
 @Pysint.command(description="<query> <amount> - Searches google for specified query")
@@ -174,6 +176,12 @@ async def twitter(query: str, amount: int =4):
 
 @Pysint.command(description="<query> - Gathers information regarding an IP address")
 async def geoip(query:str):
-    geoip = GeoIp()
-    resp = await geoip.get(query)
+    geoip = Host()
+    resp = await geoip.get_ip(query)
+    await aprint(resp)
+
+@Pysint.command(description="<query> - Gathers information regarding a host")
+async def whois(query: str):
+    host = Host()
+    resp = await host.host_whois(query)
     await aprint(resp)

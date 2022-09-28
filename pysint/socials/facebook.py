@@ -12,6 +12,9 @@ class Facebook:
 
 		Args:
 			query (str): The query which you wish to search for
+
+        Returns:
+            list[str]: The urls returned from the search
 		"""
 
         async with aiohttp.ClientSession() as session:
