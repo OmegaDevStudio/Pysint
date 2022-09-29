@@ -192,4 +192,9 @@ async def whois(query: str):
     resp = await host.host_whois(query)
     await aprint(resp)
 
+@Pysint.command(description="<query> - Checks if email has been in any breaches")
+async def emailpwn(query: str):
+    pwn = Pwned()
+    resp = await pwn.check_email(query)
+    await aprint(resp)
 
