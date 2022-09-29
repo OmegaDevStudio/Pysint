@@ -140,8 +140,6 @@ async def codesearch(query: str, amount: int = 4):
     for url in resp:
         await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND {color.LIGHTBLUE_EX}[{color.YELLOW}>{color.LIGHTBLUE_EX}] {color.LIGHTYELLOW_EX}{url}{color.RESET}")
 
-
-
 @Pysint.command(description="<query> <amount> - Searches Instagram using dorking methods")
 async def instagram(query: str, amount: int = 4):
     google = Google()
@@ -169,8 +167,6 @@ async def facebookapi(query: str):
     resp = await facebook.search(query)
     for url in resp:
         await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND {color.LIGHTBLUE_EX}[{color.YELLOW}>{color.LIGHTBLUE_EX}] {color.LIGHTYELLOW_EX}{url}{color.RESET}")
-
-
 
 @Pysint.command(description="<query> - Searches Twitter using dorking methods")
 async def twitter(query: str, amount: int =4):
