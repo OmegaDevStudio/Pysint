@@ -3,7 +3,7 @@ from colorama import Fore as color
 from aioconsole import aprint, ainput
 import os
 from .lookups import *
-from .browsers import *
+from .searches import *
 from .socials import *
 from .lookups import *
 
@@ -97,41 +97,49 @@ async def google(query: str, amount: int = 4):
     google = Google()
     resp = await google.search(query, int(amount))
     for url in resp:
-        await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND -> {url}")
+        await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND {color.LIGHTBLUE_EX}[{color.YELLOW}>{color.LIGHTBLUE_EX}] {color.LIGHTYELLOW_EX}{url}{color.RESET}")
 
 @Pysint.command(description="<query> <amount> - Searches yandex for specified query")
 async def yandex(query: str, amount: int = 4):
     yandex = Yandex()
     resp = await yandex.search(query, amount)
     for url in resp:
-        await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND -> {url}")
+        await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND {color.LIGHTBLUE_EX}[{color.YELLOW}>{color.LIGHTBLUE_EX}] {color.LIGHTYELLOW_EX}{url}{color.RESET}")
 
 @Pysint.command(description="<path> - Searches yandex with image search")
 async def imagesearch(path: str):
     yandex = Yandex()
     resp = await yandex.image_search(path)
     for url in resp:
-        await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND -> {url}")
+        await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND {color.LIGHTBLUE_EX}[{color.YELLOW}>{color.LIGHTBLUE_EX}] {color.LIGHTYELLOW_EX}{url}{color.RESET}")
 
 @Pysint.command(description="<query> <amount> - Searches duckduckgo for specified query")
 async def duck(query: str, amount: int = 4):
     duck = DuckDuckGo()
     resp = await duck.search(query, amount)
     for url in resp:
-        await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND -> {url}")
+        await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND {color.LIGHTBLUE_EX}[{color.YELLOW}>{color.LIGHTBLUE_EX}] {color.LIGHTYELLOW_EX}{url}{color.RESET}")
 
 @Pysint.command(description="<query> - Searches shodan for specified query")
 async def shodan(query: str):
     shodan = Shodan()
     resp = await shodan.search(query)
     for url in resp:
-        await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND -> {url}")
+        await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND {color.LIGHTBLUE_EX}[{color.YELLOW}>{color.LIGHTBLUE_EX}] {color.LIGHTYELLOW_EX}{url}{color.RESET}")
 
 @Pysint.command(description="<query> - Gives in depth shodan report for specified search")
 async def shodanreport(query: str):
     shodan = Shodan()
     resp = await shodan.report(query)
     await aprint(resp)
+
+@Pysint.command(description="<query> <amount> - Searches codesearch for specified query")
+async def codesearch(query: str, amount: int = 4):
+    code = CodeSearch()
+    resp = await code.search(query, amount)
+    for url in resp:
+        await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND {color.LIGHTBLUE_EX}[{color.YELLOW}>{color.LIGHTBLUE_EX}] {color.LIGHTYELLOW_EX}{url}{color.RESET}")
+
 
 
 @Pysint.command(description="<query> <amount> - Searches Instagram using dorking methods")
@@ -143,7 +151,7 @@ async def instagram(query: str, amount: int = 4):
     gathered = await asyncio.gather(google.search(f"site:'https://instagram.com' intitle:'{query}'", amount), yandex.search(f"site:'https://instagram.com' intitle:'{query}'", amount), duck.search(f"site:'https://instagram.com' intitle:'{query}'", amount) )
     for searches in gathered:
         for url in searches:
-            await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND -> {url}")
+            await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND {color.LIGHTBLUE_EX}[{color.YELLOW}>{color.LIGHTBLUE_EX}] {color.LIGHTYELLOW_EX}{url}{color.RESET}")
 
 @Pysint.command(description="<query> <amount> - Searches Facebook using dorking methods")
 async def facebook(query: str, amount: int = 4):
@@ -153,14 +161,14 @@ async def facebook(query: str, amount: int = 4):
     gathered = await asyncio.gather(google.search(f"site:'https://facebook.com' intitle:'{query}'", amount), yandex.search(f"site:'https://facebook.com' intitle:'{query}'", amount), duck.search(f"site:'https://facebook.com' intitle:'{query}'", amount))
     for searches in gathered:
         for url in searches:
-            await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND -> {url}")
+            await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND {color.LIGHTBLUE_EX}[{color.YELLOW}>{color.LIGHTBLUE_EX}] {color.LIGHTYELLOW_EX}{url}{color.RESET}")
 
 @Pysint.command(description="<query> - Searches Facebook using API")
 async def facebookapi(query: str):
     facebook = Facebook()
     resp = await facebook.search(query)
     for url in resp:
-        await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND -> {url}")
+        await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND {color.LIGHTBLUE_EX}[{color.YELLOW}>{color.LIGHTBLUE_EX}] {color.LIGHTYELLOW_EX}{url}{color.RESET}")
 
 
 
@@ -172,7 +180,7 @@ async def twitter(query: str, amount: int =4):
     gathered = await asyncio.gather(google.search(f"site:'https://twitter.com' intitle:'{query}'", amount), yandex.search(f"site:'https://twitter.com' intitle:'{query}'", amount), duck.search(f"site:'https://twitter.com' intitle:'{query}'", amount))
     for searches in gathered:
         for url in searches:
-            await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND -> {url}")
+            await aprint(f"{color.LIGHTYELLOW_EX}LINK FOUND {color.LIGHTBLUE_EX}[{color.YELLOW}>{color.LIGHTBLUE_EX}] {color.LIGHTYELLOW_EX}{url}{color.RESET}")
 
 @Pysint.command(description="<query> - Gathers information regarding an IP address from public sources")
 async def geoip(query:str):
