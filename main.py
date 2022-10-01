@@ -3,8 +3,6 @@ import asyncio
 
 # Made by Shell
 
-
-
 async def main():
     await Pysint.ascii()
     await Pysint.command_input()
